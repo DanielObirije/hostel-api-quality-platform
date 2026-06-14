@@ -110,6 +110,19 @@ export class RoomClient extends BaseClient {
     return response;
   }
 
+  async updateBranding(brandingData: object) {
+    const cookie = await auth.createToken();
+    const response = await fetch(baseurl + `api/branding`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+      body: JSON.stringify(brandingData),
+    });
+    return response;
+  }
+
   // async createRoomById(roomname: string, price: number) {
   //   const roomBody =
   //   return response;
@@ -127,5 +140,3 @@ export class RoomClient extends BaseClient {
     roomPrice: 100,
   };
 }
-
-

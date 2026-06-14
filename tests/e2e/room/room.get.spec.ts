@@ -15,7 +15,7 @@ test.describe("room/ GET requests @room", () => {
   });
 
   test("GET a room by id @happy", async () => {
-    const roomId = 1;
+    const roomId = 2;
     const response = await fetch(baseurl + `api/room/${roomId}`, {
       method: "GET",
     });
