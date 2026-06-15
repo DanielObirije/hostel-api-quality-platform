@@ -123,6 +123,19 @@ export class RoomClient extends BaseClient {
     return response;
   }
 
+  // async createMessage(messageData: object) {
+  //   const cookie = await auth.createToken();
+  //   const response = await fetch(baseurl + `api/message`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Cookie: `token=${cookie}`,
+  //     },
+  //     body: JSON.stringify(messageData),
+  //   });
+  //   return response;
+  // }
+
   // async createRoomById(roomname: string, price: number) {
   //   const roomBody =
   //   return response;

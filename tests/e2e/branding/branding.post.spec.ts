@@ -11,4 +11,15 @@ test.describe("branding/ PUT requests", async () => {
     const body = await response.json();
     await validateJsonSchema("PUT_branding_id", "brand", body);
   });
+
+  test("PUT website with invalid branding details", async () => {
+    const emptyBrandingDetails = {};
+    const response = await roomClient.updateBranding(emptyBrandingDetails);
+    expect(response.status).toEqual(400);
+    const body = await response.json();
+    expect(body).toMatchObject({
+      error: "BAD_REQUEST",
+      errorCode: 400,
+    });
+  });
 });

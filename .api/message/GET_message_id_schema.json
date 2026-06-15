@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "messageid": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "description",
+    "email",
+    "messageid",
+    "name",
+    "phone",
+    "subject"
+  ]
+}
