@@ -10,7 +10,7 @@ test.describe("message/ POST requests @message", async () => {
     await validateJsonSchema("POST_message", "message", body, true);
   });
 
-  test.only("POST a message with invalid message data", async ({ request }) => {
+  test("POST a message with invalid message data", async ({ request }) => {
     const message = {};
     const response = await request.post("api/message", { data: message });
     expect(response.status()).toEqual(400);

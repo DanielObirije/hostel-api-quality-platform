@@ -141,6 +141,43 @@ export class RoomClient extends BaseClient {
   //   return response;
   // }
 
+  async getBookingsByid(id?: unknown) {
+    const cookie = await auth.createToken();
+    const response = await fetch(baseurl + `api/booking/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+    });
+    return response;
+  }
+
+  async getBookingsByRoomId(id?: unknown) {
+    const cookie = await auth.createToken();
+    const response = await fetch(baseurl + `api/booking/?roomid=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+    });
+    return response;
+  }
+
+  async getBookingRoomSummary(id?: unknown) {
+    const cookie = await auth.createToken();
+    const response = await fetch(baseurl + `api/booking/summary?roomid=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+    });
+    return response;
+  }
+
+
   defultRoom = {
     roomid: 1,
     roomName: "100",
