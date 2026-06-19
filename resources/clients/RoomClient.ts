@@ -82,20 +82,6 @@ export class RoomClient extends BaseClient {
     });
     return response;
   }
-  // async UpdateRoom(roomID: number) {
-  //   const cookie = await auth.createToken();
-  //   const roomBody = await this.createRandomRoomBody();
-  //   const response = await fetch(baseurl + `api/room/${roomID}`, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Cookie: `token=${cookie}`,
-  //     },
-  //     body: JSON.stringify(roomBody),
-  //   });
-  //   return response;
-  // }
-
   async UpdateRoom(roomID: number, body?: object) {
     const cookie = await auth.createToken();
     const roomBody = body ?? (await this.createRandomRoomBody());
@@ -109,74 +95,6 @@ export class RoomClient extends BaseClient {
     });
     return response;
   }
-
-  async updateBranding(brandingData: object) {
-    const cookie = await auth.createToken();
-    const response = await fetch(baseurl + `api/branding`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `token=${cookie}`,
-      },
-      body: JSON.stringify(brandingData),
-    });
-    return response;
-  }
-
-  // async createMessage(messageData: object) {
-  //   const cookie = await auth.createToken();
-  //   const response = await fetch(baseurl + `api/message`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Cookie: `token=${cookie}`,
-  //     },
-  //     body: JSON.stringify(messageData),
-  //   });
-  //   return response;
-  // }
-
-  // async createRoomById(roomname: string, price: number) {
-  //   const roomBody =
-  //   return response;
-  // }
-
-  async getBookingsByid(id?: unknown) {
-    const cookie = await auth.createToken();
-    const response = await fetch(baseurl + `api/booking/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `token=${cookie}`,
-      },
-    });
-    return response;
-  }
-
-  async getBookingsByRoomId(id?: unknown) {
-    const cookie = await auth.createToken();
-    const response = await fetch(baseurl + `api/booking/?roomid=${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `token=${cookie}`,
-      },
-    });
-    return response;
-  }
-
-  async getBookingRoomSummary(id?: unknown) {
-    const cookie = await auth.createToken();
-    const response = await fetch(baseurl + `api/booking/summary?roomid=${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `token=${cookie}`,
-      },
-    });
-    return response;
-  }
-
 
   defultRoom = {
     roomid: 1,
