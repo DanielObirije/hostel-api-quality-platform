@@ -1,8 +1,6 @@
-//import { expect, request } from "@playwright/test";
 import { BaseClient } from "./BaseClient";
 import { AuthClient } from "./AuthClient";
 import { faker } from "@faker-js/faker";
-const baseurl = BaseClient.URL;
 const auth = new AuthClient();
 
 const roomFeatures = [
@@ -60,7 +58,7 @@ export class RoomClient extends BaseClient {
     // const roomBody = body ?? (await this.createRandomRoomBody());
     const roomBody = body ?? (await this.createRandomRoomBody(roomname, price));
     // console.log("room body", roomBody);
-    const response = await fetch(baseurl + "api/room", {
+    const response = await fetch(RoomClient.URL + "api/room", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +71,7 @@ export class RoomClient extends BaseClient {
 
   async deleteRoom(roomID: number) {
     const cookie = await auth.createToken();
-    const response = await fetch(baseurl + `api/room/${roomID}`, {
+    const response = await fetch(RoomClient.URL + `api/room/${roomID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +83,7 @@ export class RoomClient extends BaseClient {
   async UpdateRoom(roomID: number, body?: object) {
     const cookie = await auth.createToken();
     const roomBody = body ?? (await this.createRandomRoomBody());
-    const response = await fetch(baseurl + `api/room/${roomID}`, {
+    const response = await fetch(RoomClient.URL + `api/room/${roomID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

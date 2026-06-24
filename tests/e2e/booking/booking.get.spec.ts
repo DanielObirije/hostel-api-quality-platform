@@ -9,7 +9,7 @@ test.describe("booking/ GET requests @booking", async () => {
     const response = await bookingClient.getBookingsByid(id);
     expect(response.status).toEqual(200);
     const body = await response.json();
-    await validateJsonSchema("GET_booking_id", "booking", body, true);
+    await validateJsonSchema("GET_booking_id", "booking", body);
   });
 
   test("GET booking by id with a room id that doesn't exist", async () => {
