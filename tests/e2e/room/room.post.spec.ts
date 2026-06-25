@@ -40,29 +40,6 @@ test.describe("room/ GET requests @room", () => {
     await validateJsonSchema("POST_room", "room", roomsBodyJson);
   });
 
-  // test("POST create room with empty body ", async () => {
-  //   const roomPrice = 100;
-  //   const roomName = "GET";
-  //   const body = {};
-  //   const response = await roomClient.createRoom(roomName, roomPrice, body);
-
-  //   expect(response.status).toBe(200);
-  //   expect(response).toMatchObject({
-  //     errors: ["must be greater than or equal to 1", "Room name must be set", "must not be null", "Type must be set"],
-  //   });
-  // });
-
-  // test("POST create room with empty body", async () => {
-  //   const roomPrice = undefined;
-  //   const roomName = undefined;
-  //   const body = undefined;
-  //   const response = await roomClient.createRoom(roomName, roomPrice, body);
-
-  //   expect(response.status).toBe(500);
-  //   expect(response).toMatchObject({
-  //     errors: ["An unexpected error occurred"],
-  //   });
-  // });
 
   test("POST /create room with invalid data types ", async () => {
     const roomPrice = undefined;
