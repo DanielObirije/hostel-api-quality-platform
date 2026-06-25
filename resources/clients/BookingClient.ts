@@ -46,6 +46,11 @@ export class BookingClient extends BaseClient {
         Cookie: `token=${cookie}`,
       },
     });
+    return response;
+  }
+
+  async getBookingsByRoomIdData(id?: unknown) {
+    const response = await this.getBookingsByRoomId(id);
     return response.json();
   }
 
@@ -87,7 +92,7 @@ export class BookingClient extends BaseClient {
   }
 
   async futureOpenCheckInDate(roomId: number) {
-    const createBookings = await this.getBookingsByRoomId(roomId);
+    const createBookings = await this.getBookingsByRoomIdData(roomId);
     const checkoutArray = [];
 
     for (let index = 0; index < createBookings.bookings.length; index++) {
@@ -118,4 +123,3 @@ export class BookingClient extends BaseClient {
     return bookingBody;
   }
 }
-
