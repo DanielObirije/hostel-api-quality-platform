@@ -84,3 +84,4 @@ test.describe("Logout API", () => {
     expect(await validateResponse.json()).toEqual({ error: "An unexpected error occurred" });
   });
 });
+

@@ -2,24 +2,10 @@ import { validateJsonSchema } from "../../../resources/helpers/validateJsonSchem
 import { RoomClient } from "../../../resources/clients/RoomClient";
 import { BaseClient } from "../../../resources/clients/BaseClient";
 import { expect, test } from "@playwright/test";
-
+import type { GetRoomsResponse } from "../../../resources/models/room.types";
+import { invalidRoomTypeBody } from "../../../resources/fixtures/roomData";
 const roomClient = new RoomClient();
 const baseurl = BaseClient.URL;
-
-interface Room {
-  accessible: boolean;
-  description: string;
-  features: string[];
-  image: string;
-  roomName: string;
-  roomPrice: number;
-  roomid: number;
-  type: string;
-}
-
-interface GetRoomsResponse {
-  rooms: Room[];
-}
 
 test.describe("room/ GET requests @room", () => {
   test("POST create room and validate creation @happy ", async () => {
@@ -40,20 +26,10 @@ test.describe("room/ GET requests @room", () => {
     await validateJsonSchema("POST_room", "room", roomsBodyJson);
   });
 
-
   test("POST /create room with invalid data types ", async () => {
     const roomPrice = undefined;
     const roomName = undefined;
-    const body = {
-      roomName: 1,
-      type: 1,
-      accessible: 1,
-      image: "https://blog.postman.com/wp-content/uploads/2014/07/logo.png",
-      description: "This is room 101, dare you enter?",
-      roomPrice: 100,
-      features: ["WiFi", "Safe"],
-    };
-
+    const body = invalidRoomTypeBody;
     const response = await roomClient.createRoom(roomName, roomPrice, body);
 
     expect(response.status).toBe(400);
@@ -61,6 +37,5 @@ test.describe("room/ GET requests @room", () => {
     expect(jsonbody).toMatchObject({
       errors: ["Type can only contain the room options Single, Double, Twin, Family or Suite"],
     });
-  
   });
 });

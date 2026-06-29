@@ -5,6 +5,6 @@ test.describe("branding/ GET requests @branding", async () => {
     const response = await request.get("api/branding/");
     expect(response.status()).toEqual(200);
     const body = await response.json();
-    await validateJsonSchema("GET_branding_id", "brand", body, true);
+    await validateJsonSchema("GET_branding_id", "brand", body);
   });
 });

@@ -54,7 +54,7 @@ test.describe("booking/ GET requests @booking", async () => {
     const response = await bookingClient.getBookingsByRoomId(roomId);
     const body = await response.json();
     expect(response.status).toEqual(200);
-    await validateJsonSchema("GET_booking_roomid", "booking", body, true);
+    await validateJsonSchema("GET_booking_roomid", "booking", body);
   });
 
   test("GET booking by roomid with invalid room id ", async () => {
@@ -73,7 +73,7 @@ test.describe("booking/ GET requests @booking", async () => {
     expect(response.status).toEqual(200);
     const body = await response.json();
 
-    await validateJsonSchema("GET_booking_summary", "booking", body, true);
+    await validateJsonSchema("GET_booking_summary", "booking", body);
   });
 
   test("GET booking summary  with wrong room id ", async () => {

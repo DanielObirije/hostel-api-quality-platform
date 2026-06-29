@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { faker } from "@faker-js/faker";
 import { BookingClient } from "../../../resources/clients/BookingClient";
 import { validateJsonSchema } from "../../../resources/helpers/validateJsonSchema";
 import { dateByDays } from "../../../resources/helpers/room";
+import { createBookingScenarios, bookingErrors } from "../../../resources/fixtures/bookingData";
 const bookingClient = new BookingClient();
 
 test.describe("booking/ POST requests @booking", () => {
@@ -19,71 +19,28 @@ test.describe("booking/ POST requests @booking", () => {
   });
 
   test("POST new booking with invalid body", async () => {
-    const bookingBody = {
-      depositpaid: true,
-      email: "test@email.com",
-      phone: "07123456789",
-      bookingdates: {
-        checkin: "2026-03-06",
-        checkout: "2026-03-07",
-      },
-    };
+    const bookingBody = createBookingScenarios.missingRequiredFields();
 
     const response = await bookingClient.postBooking(bookingBody);
     expect(response.status).toBe(400);
     const body = await response.json();
-    expect(body.errors).toEqual(
-      expect.arrayContaining([
-        "Lastname should not be blank",
-        "must be greater than or equal to 1",
-        "Firstname should not be blank",
-      ])
-    );
+    expect(body.errors).toEqual(expect.arrayContaining(bookingErrors.missingRequiredFields));
   });
 
   test("POST New Booking with Invalid Data Types in Request Body", async () => {
-    const bookingBody = {
-      roomid: false,
-      firstname: true,
-      lastname: 1,
-      depositpaid: true,
-      email: "test@email.com",
-      phone: "07123456789",
-      bookingdates: {
-        checkin: "2026-03-06",
-        checkout: "2026-03-07",
-      },
-    };
-
+    const bookingBody = createBookingScenarios.invalidDataTypes();
     const response = await bookingClient.postBooking(bookingBody);
     expect(response.status).toBe(400);
     const body = await response.json();
-    expect(body).toMatchObject({
-      errors: ["Failed to create booking"],
-    });
+    expect(body).toMatchObject(bookingErrors.invalidDataTypes);
   });
 
   test("POST New Booking with Minimum-Length String Values", async () => {
-    const bookingBody = {
-      roomid: faker.number.int({ min: 1, max: 10000 }),
-      firstname: "K",
-      lastname: "D",
-      depositpaid: true,
-      email: "test@email.com",
-      phone: "07123456789",
-      bookingdates: {
-        checkin: "2026-03-06",
-        checkout: "2026-03-07",
-      },
-    };
+    const bookingBody = createBookingScenarios.minimumLengthNames();
 
     const response = await bookingClient.postBooking(bookingBody);
     expect(response.status).toBe(400);
     const body = await response.json();
-    expect(body.errors).toEqual(
-      expect.arrayContaining(["size must be between 3 and 18", "size must be between 3 and 30"])
-    );
+    expect(body.errors).toEqual(expect.arrayContaining(bookingErrors.minimumLengthNames));
   });
-
-  
 });

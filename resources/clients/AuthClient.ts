@@ -63,11 +63,24 @@ export class AuthClient extends BaseClient {
     };
     return header;
   }
-  
+
   createinvalidToken() {
     const header = {
       Authorization: `Bearer ${faker.string.alphanumeric(10)}`,
     };
     return header;
+  }
+  async loginUser(username?: string, password?: string) {
+    const response = await fetch(AuthClient.URL + "api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username || AuthClient.ADMIN_NAME,
+        password: password || AuthClient.ADMIN_PASSWORD,
+      }),
+    });
+    return response;
   }
 }

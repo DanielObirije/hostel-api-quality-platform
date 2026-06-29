@@ -1,22 +1,8 @@
 import { BaseClient } from "./BaseClient";
 import { AuthClient } from "./AuthClient";
 import { faker } from "@faker-js/faker";
+import { roomFeatures, roomType } from "../fixtures/roomData";
 const auth = new AuthClient();
-
-const roomFeatures = [
-  "King Bed",
-  "Ocean View",
-  "Private Balcony",
-  "Smart TV",
-  "Mini Fridge",
-  "Air Conditioning",
-  "Walk-in Closet",
-  "Rainfall Shower",
-  "High-Speed WiFi",
-  "Coffee Maker",
-];
-
-const roomType = ["Single", "Double", "Twin"];
 
 export class RoomClient extends BaseClient {
   constructor() {
@@ -55,9 +41,7 @@ export class RoomClient extends BaseClient {
 
   async createRoom(roomname?: string, price?: number, body?: object) {
     const cookie = await auth.createToken();
-    // const roomBody = body ?? (await this.createRandomRoomBody());
     const roomBody = body ?? (await this.createRandomRoomBody(roomname, price));
-    // console.log("room body", roomBody);
     const response = await fetch(RoomClient.URL + "api/room", {
       method: "POST",
       headers: {
@@ -93,16 +77,4 @@ export class RoomClient extends BaseClient {
     });
     return response;
   }
-
-  defultRoom = {
-    roomid: 1,
-    roomName: "100",
-    type: "single",
-    accessible: true,
-    image: faker.image.url(),
-    description:
-      "this is is a defult room with basic features, it is a single room with a king bed, private balcony, and a mini fridge.",
-    features: ["TV", "WiFi", "Safe"],
-    roomPrice: 100,
-  };
 }

@@ -2,23 +2,6 @@ import { BaseClient } from "./BaseClient";
 import { AuthClient } from "./AuthClient";
 import { faker } from "@faker-js/faker";
 const auth = new AuthClient();
-export type BookingDates = {
-  checkin: string;
-  checkout: string;
-};
-
-export type Booking = {
-  bookingdates: BookingDates;
-  bookingid: number;
-  depositpaid: boolean;
-  firstname: string;
-  lastname: string;
-  roomid: number;
-};
-
-export type BookingsResponse = {
-  bookings: Booking[];
-};
 
 export class BookingClient extends BaseClient {
   constructor() {
