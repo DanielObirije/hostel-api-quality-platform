@@ -9,6 +9,11 @@ export const k6Config = {
 
   debug: __ENV.DEBUG == "true" || false,
 
+  credentials: {
+    username: __ENV.TEST_USERNAME || "admin",
+    password: __ENV.TEST_PASSWORD || "password",
+  },
+
   thinkTime: {
     min: parseInt(__ENV.THINK_TIME_MIN || "1"),
     max: parseInt(__ENV.THINK_TIME_MAX || "3"),

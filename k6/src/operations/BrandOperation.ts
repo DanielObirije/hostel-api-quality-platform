@@ -4,7 +4,8 @@ import { endpoint } from "../../endpoint";
 import { BaseOperation } from "./BaseOperation";
 import { performGet } from "../lib/requestUtils";
 import type { BrandDetails } from "../../types";
-export class BrandOperation extends BaseOperation {
+
+export class brandOperation extends BaseOperation {
   public static readonly URL = process.env.UR;
   constructor() {
     super();
@@ -13,7 +14,7 @@ export class BrandOperation extends BaseOperation {
   async getBranding() {
     return group("GET website branding", () => {
       //const startTime = Date.now();
-      const url = endpoint.brand;
+      const url = endpoint.branding.detail;
 
       const headers = {
         "Content-Type": "application/json",
