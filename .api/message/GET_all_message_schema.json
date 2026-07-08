@@ -19,16 +19,9 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "read",
-          "subject"
-        ]
+        "required": ["id", "name", "read", "subject"]
       }
     }
   },
-  "required": [
-    "messages"
-  ]
+  "required": ["messages"]
 }

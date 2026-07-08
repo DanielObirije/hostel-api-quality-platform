@@ -1,6 +1,6 @@
-import config from "./config";
+import { k6Config } from "./config";
 
-const BASE_URL = config.baseUrl;
+const BASE_URL = k6Config.baseUrl;
 
 export const endpoint = {
   brand: `${BASE_URL}/api/branding/`,

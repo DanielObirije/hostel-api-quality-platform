@@ -58,7 +58,7 @@ export const bookingErrors = {
 
   invalidDataTypes: { errors: ["Failed to create booking"] },
 
-  minimumLengthNames:["size must be between 3 and 18", "size must be between 3 and 30"],
+  minimumLengthNames: ["size must be between 3 and 18", "size must be between 3 and 30"],
 
-  missingNames:  ["Lastname should not be blank", "Firstname should not be blank"],
+  missingNames: ["Lastname should not be blank", "Firstname should not be blank"],
 };

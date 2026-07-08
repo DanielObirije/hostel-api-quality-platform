@@ -20,13 +20,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "county",
-        "line1",
-        "line2",
-        "postCode",
-        "postTown"
-      ]
+      "required": ["county", "line1", "line2", "postCode", "postTown"]
     },
     "contact": {
       "type": "object",
@@ -41,11 +35,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "email",
-        "name",
-        "phone"
-      ]
+      "required": ["email", "name", "phone"]
     },
     "description": {
       "type": "string"
@@ -66,22 +56,11 @@
           "type": "number"
         }
       },
-      "required": [
-        "latitude",
-        "longitude"
-      ]
+      "required": ["latitude", "longitude"]
     },
     "name": {
       "type": "string"
     }
   },
-  "required": [
-    "address",
-    "contact",
-    "description",
-    "directions",
-    "logoUrl",
-    "map",
-    "name"
-  ]
+  "required": ["address", "contact", "description", "directions", "logoUrl", "map", "name"]
 }

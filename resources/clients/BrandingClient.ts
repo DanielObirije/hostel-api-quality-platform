@@ -1,6 +1,6 @@
 import { BaseClient } from "./BaseClient";
 import { AuthClient } from "./AuthClient";
-const auth = new AuthClient
+const auth = new AuthClient();
 export class BrandingClient extends BaseClient {
   constructor() {
     super();
@@ -17,5 +17,4 @@ export class BrandingClient extends BaseClient {
     });
     return response;
   }
-
 }

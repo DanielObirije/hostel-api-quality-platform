@@ -1,6 +1,6 @@
 export const updateBranding = {
   name: "Willow Creek Lodge",
-  logoUrl:"https://yourdomain.com/images/willow-creek-logo.jpg",
+  logoUrl: "https://yourdomain.com/images/willow-creek-logo.jpg",
   description:
     "Welcome to Willow Creek Lodge, a quiet countryside retreat surrounded by rolling hills near Oakbridge. A calm and comfortable place to relax and enjoy nature. All our rooms are cozy and we serve fresh breakfast every morning.",
   directions: "Turn off the main road toward Maple Ridge Valley and follow signs for Willow Creek Lodge.",

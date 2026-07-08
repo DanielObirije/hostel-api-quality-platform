@@ -10,7 +10,7 @@ test.describe("room/ PUT requests @room", () => {
     expect(response.status).toBe(202);
     const body = await response.json();
 
-    await validateJsonSchema("PUT_rooms", "room", body, true);
+    await validateJsonSchema("PUT_rooms", "room", body);
   });
 
   test("PUT /rooms with empty body", async () => {

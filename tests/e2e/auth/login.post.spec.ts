@@ -44,7 +44,6 @@ test.describe("auth/login POST request @auth", async () => {
     expect(body).toHaveProperty("error");
   });
 
-
   test("POST with no body", async ({ request }) => {
     const response = await request.post("api/auth/login", {
       data: {},

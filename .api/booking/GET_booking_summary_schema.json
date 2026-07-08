@@ -16,19 +16,12 @@
                 "type": "string"
               }
             },
-            "required": [
-              "checkin",
-              "checkout"
-            ]
+            "required": ["checkin", "checkout"]
           }
         },
-        "required": [
-          "bookingDates"
-        ]
+        "required": ["bookingDates"]
       }
     }
   },
-  "required": [
-    "bookings"
-  ]
+  "required": ["bookings"]
 }

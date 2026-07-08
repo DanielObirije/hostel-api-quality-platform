@@ -19,7 +19,7 @@ test.describe("booking/ PUT requests @booking", () => {
   });
 
   test("PUT booking without firstname and lastname in body", async () => {
-    const bookingBody = createBookingScenarios.withoutNames()
+    const bookingBody = createBookingScenarios.withoutNames();
     const response = await bookingClient.postBooking(bookingBody);
     expect(response.status).toBe(400);
     const body = await response.json();

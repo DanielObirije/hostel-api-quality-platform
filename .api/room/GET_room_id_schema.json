@@ -29,14 +29,5 @@
       "type": "string"
     }
   },
-  "required": [
-    "accessible",
-    "description",
-    "features",
-    "image",
-    "roomName",
-    "roomPrice",
-    "roomid",
-    "type"
-  ]
+  "required": ["accessible", "description", "features", "image", "roomName", "roomPrice", "roomid", "type"]
 }

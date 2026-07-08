@@ -14,10 +14,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "checkin",
-            "checkout"
-          ]
+          "required": ["checkin", "checkout"]
         },
         "bookingid": {
           "type": "integer"
@@ -35,21 +32,11 @@
           "type": "integer"
         }
       },
-      "required": [
-        "bookingdates",
-        "bookingid",
-        "depositpaid",
-        "firstname",
-        "lastname",
-        "roomid"
-      ]
+      "required": ["bookingdates", "bookingid", "depositpaid", "firstname", "lastname", "roomid"]
     },
     "bookingid": {
       "type": "integer"
     }
   },
-  "required": [
-    "booking",
-    "bookingid"
-  ]
+  "required": ["booking", "bookingid"]
 }

@@ -20,12 +20,5 @@
       "type": "string"
     }
   },
-  "required": [
-    "description",
-    "email",
-    "messageid",
-    "name",
-    "phone",
-    "subject"
-  ]
+  "required": ["description", "email", "messageid", "name", "phone", "subject"]
 }
