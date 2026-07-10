@@ -1,11 +1,15 @@
-import * as dotenv from "dotenv";
 
-dotenv.config();
-
+import { k6Config } from "../../config";
 export class BaseOperation {
-  public static readonly URL = process.env.URL;
-  public static readonly ADMIN_NAME = process.env.ADMIN_NAME;
-  public static readonly ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-  public static readonly SECRET_API_KEY = process.env.SECRET_API_KEY;
+  protected readonly config = k6Config;
+
+  protected readonly baseUrl = k6Config.baseUrl;
+
+  protected readonly apiKey = k6Config.apiKey;
+
+  protected readonly username = k6Config.credentials.username;
+
+  protected readonly password = k6Config.credentials.password;
+
   constructor() {}
 }
