@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test ",
-    "test:smoke": "k6 run k6/scenarios/smoke-test.ts",
+    "k6:build": "node k6/build.js",
+    "k6:run": "k6 run k6/dist/smoke-test.js",
+    "k6:test": "npm run k6:build && npm run k6:run",
     "prepare": "husky",
     "lint": "eslint .",
     "prettier": "prettier --write ."
@@ -30,19 +32,22 @@
     "@types/node": "^25.9.0",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
+    "dotenv": "^17.4.2",
     "esbuild": "^0.28.1",
     "eslint": "^10.4.0",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "prettier": "^3.8.3",
+    "ts-loader": "^9.6.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4"
+    "typescript-eslint": "^8.59.4",
+    "webpack": "^5.108.4",
+    "webpack-cli": "^7.2.1"
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "ajv": "^8.20.0",
-    "dotenv": "^17.4.2",
     "genson-js": "^0.0.8"
   }
 }
