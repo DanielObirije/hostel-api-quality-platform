@@ -1,11 +1,8 @@
-
 import { AuthOperation } from "../operations/AuthOperation";
-// import { brandOperation } from "../operations/BrandOperation";
+import { k6Config } from "config";
 
 export function completeJourney() {
   const auth = new AuthOperation();
-  // const brand = new brandOperation();
 
-  auth.login();
-  // brand.getBranding()
+  auth.login(k6Config.credentials.username, k6Config.credentials.password);
 }

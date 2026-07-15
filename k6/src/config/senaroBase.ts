@@ -1,9 +1,20 @@
+import { k6Config } from "config";
+
+interface senarioConfig {
+  executor: string;
+  vus?: number;
+  duration?: string;
+  iterations?: number;
+  stages?: Array<{ duration: string; target: number }>;
+  gracefulStop?: string;
+}
+
 export function createSenarioOption(
   testName: string,
-  senarioConfig: object,
+  senarioConfig: Record<string, senarioConfig>,
   customThresholds = {},
   additionalOption = {}
-) {
+): Record<string, unknown> {
   return {
     cloud: {
       projectID: 1,
@@ -15,10 +26,10 @@ export function createSenarioOption(
 
     senarios: senarioConfig,
 
-    thresholds:{
-      http_req_duration: ["p(95)<500"],
-      http_req_failed: ["rate<0.01"],
-
+    thresholds: {
+      http_req_duration: [k6Config.thresholds.http_req_duration],
+      http_req_failed: [k6Config.thresholds.http_req_failed],
+      checks: [k6Config.thresholds.checks],
       ...customThresholds,
     },
     ...additionalOption,
@@ -26,11 +37,21 @@ export function createSenarioOption(
 }
 
 export const defultConfigurations = {
-   smoke:{
-     executor: "constant-vus",
-     vus: 1,
-     duration: "1m",
-     gracefulStop: "5s"
-
-   }
-}
+  smoke: {
+    executor: "constant-vus",
+    vus: 1,
+    duration: "1m",
+    gracefulStop: "5s",
+  },
+  load: {
+    executor: "constant-vus",
+    vus: 5,
+    duration: "5m",
+    gracefulStop: "10s",
+  },
+  quick: {
+    executor: "constant-vus",
+    vus: 1,
+    iterations: 1,
+  },
+};

@@ -27,13 +27,13 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// k6/scenarios/smoke-test.ts
-var smoke_test_exports = {};
-__export(smoke_test_exports, {
-  default: () => smoke_test_default,
+// k6/scenarios/quick-test.ts
+var quick_test_exports = {};
+__export(quick_test_exports, {
+  default: () => quick_test_default,
   options: () => options
 });
-module.exports = __toCommonJS(smoke_test_exports);
+module.exports = __toCommonJS(quick_test_exports);
 
 // k6/src/operations/BrandOperation.ts
 var import_k62 = require("k6");
@@ -309,10 +309,10 @@ var defultConfigurations = {
   }
 };
 
-// k6/scenarios/smoke-test.ts
+// k6/scenarios/quick-test.ts
 var import_k63 = require("k6");
-var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
-function smoke_test_default() {
+var options = createSenarioOption("Quick Test", { quick_test: defultConfigurations.quick });
+function quick_test_default() {
   logConfig();
   brandingJourney();
   (0, import_k63.sleep)(1);

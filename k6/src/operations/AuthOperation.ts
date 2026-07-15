@@ -25,10 +25,11 @@ export class AuthOperation extends BaseOperation {
       const url = endpoint.auth.login;
       const headers = this.getHeaders();
       const payload = {
-        username: this.username,
-        password: this.password,
+        username: username || this.username,
+        password: password || this.password,
       };
       const response = performPost(url, headers, payload, "Successfully logged in", "Login");
+      console.warn(response?.json());
       if (response) {
         check(response, {
           "Login status 200": (r: Response) => r.status === 200,
@@ -38,6 +39,7 @@ export class AuthOperation extends BaseOperation {
           },
         });
         const data = response.json() as unknown as LoginResponse;
+
         if (data.token) {
           this.authToken = data.token;
         }
@@ -45,18 +47,7 @@ export class AuthOperation extends BaseOperation {
     });
   }
 
-  protected getAuthHeaders(token?: string): Record<string, string> {
-    return this.getAuthHeaders(this.authToken);
-  }
-
-  getHeadersWithAuth(extraHeaders: Record<string, string> = {}): Record<string, string> {
-    const headers = this.getAuthHeaders;
-    if (this.authToken) {
-      headers["Cookies"] = `token=${this.authToken}`;
-    }
-    return {
-      ...headers,
-      ...extraHeaders,
-    };
+  protected getAuthHeaders(): Record<string, string> {
+    return super.getAuthHeaders(this.authToken);
   }
 }

@@ -1,0 +1,15 @@
+// import { completeJourney } from "../src/userjourneys/completeJourney";
+import brandingJourney from "src/userjourneys/brandingJourney";
+import { createSenarioOption, defultConfigurations } from "src/config/senaroBase";
+import { logConfig } from "config";
+import { sleep } from "k6";
+
+export const options = createSenarioOption("Quick Test", { quick_test: defultConfigurations.quick });
+
+export default function (): void {
+  logConfig();
+
+  brandingJourney();
+
+  sleep(1);
+}

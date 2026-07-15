@@ -1,14 +1,23 @@
 import { completeJourney } from "../src/userjourneys/completeJourney";
+import brandingJourney from "src/userjourneys/brandingJourney";
+import { createSenarioOption, defultConfigurations } from "src/config/senaroBase";
+import { logConfig } from "config";
+import { sleep } from "k6";
+// export const options = {
+//   vus: 1,
+//   duration: "10s",
+//   thresholds: {
+//     http_req_failed: ["rate<0.01"],
+//     http_req_duration: ["p(95)<2000"],
+//   },
+// };
+export const options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
 
-export const options = {
-  vus: 1,
-  duration: "10s",
-  thresholds: {
-    http_req_failed: ["rate<0.01"],
-    http_req_duration: ["p(95)<2000"],
-  },
-};
+export default function (): void {
+  logConfig();
 
-export default function () {
-  completeJourney();
+  // completeJourney();
+  brandingJourney();
+
+  sleep(1);
 }

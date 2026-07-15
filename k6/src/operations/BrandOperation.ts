@@ -1,45 +1,61 @@
-// import { group, check } from "k6";
-// import type { Response } from "k6/http";
-// // import { endpoint } from "../../endpoint";
-// import { endpoint } from "../../endpoint";
-// import { BaseOperation } from "./BaseOperation";
-// import { performGet } from "../lib/requestUtils";
-// import type { BrandDetails } from "../../types";
+import { check, group } from "k6";
+import { Response } from "k6/http";
+import { endpoint } from "endpoint";
+import { performGet, performPut } from "src/lib/requestUtils";
+import { BaseOperation } from "./BaseOperation";
+import { AuthOperation } from "./AuthOperation";
+import { brandingData } from "src/payloads/brandingPayload";
+// const authOperation = new AuthOperation();
 
-// export class brandOperation extends BaseOperation {
-//   public static readonly URL = process.env.UR;
-//   constructor() {
-//     super();
-//   }
+interface BrandDetails {
+  name: string;
+  address: object;
+  contact: object;
+  description: string;
+}
+interface UpdateBrandDetails {
+  success: boolean;
+}
 
-//   async getBranding() {
-//     return group("GET website branding", () => {
-//       //const startTime = Date.now();
-//       const url = endpoint.branding.detail;
+export class BrandOperation extends AuthOperation {
+  constructor() {
+    super();
+  }
 
-//       const headers = {
-//         "Content-Type": "application/json",
-//       };
+  getBranding(): void {
+    group("GET website branding", () => {
+      const url = endpoint.branding.detail;
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, "Successfully retrieved branding", "Get Branding");
+      if (response) {
+        const data = response.json() as unknown as BrandDetails;
+        check(response, {
+          "Branding status is 200": (r: Response) => r.status === 200,
+          "Branding has name": () => data.name !== undefined,
+          "Branding has address": () => data.address !== undefined,
+        });
+      }
+    });
+  }
 
-//       const response = performGet(
-//         "get",
-//         url,
-//         headers,
-//         {},
-//         "Successfully retrieved Get All Branding",
-//         "Get All Branding"
-//       );
+  updateBranding() {
+    group("PUT  update website branding", () => {
+      console.warn("yes yes");
+      this.login("admin", "password");
 
-//       // Validate response
-//       if (response) {
-//         const data = response.json() as unknown as BrandDetails;
-//         check(response, {
-//           "status is 200": (r: Response) => r.status === 200,
-//           "has name": () => data.name !== undefined,
-//           "has address": () => data.address !== undefined,
-//         });
-//         return response;
-//       }
-//     });
-//   }
-// }
+      //   console.warn(this.getToken());
+      //   const url = endpoint.branding.update;
+      //   const headers = this.getAuthHeaders();
+      //   console.warn(this.getToken());
+      //   const response = performPut(url, headers, brandingData, "Successfully updated branding", "PUT Branding");
+      //   if (response) {
+      //     const data = response.json() as unknown as UpdateBrandDetails;
+      //     check(response, {
+      //       "Branding status is 200": (r: Response) => r.status === 200,
+      //       "Response has success": () => data.success !== undefined,
+      //       "Success is true": () => data.success === true,
+      //     });
+      //   }
+    });
+  }
+}

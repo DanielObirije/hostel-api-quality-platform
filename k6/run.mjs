@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
+const scenario = process.argv[2];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +29,7 @@ try {
     .join(" ");
 
   // Run TypeScript directly - k6 handles TypeScript via esbuild
-  execSync(`k6 run ${envVars} k6/scenarios/smoke-test.ts`, {
+  execSync(`k6 run ${envVars} k6/scenarios/${scenario}.ts`, {
     stdio: "inherit",
   });
 } catch (e) {
