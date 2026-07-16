@@ -10,8 +10,10 @@ export const endpoint = {
   booking: {
     list: (id: number) => `${BASE_URL}/api/booking?roomid=${id}`,
     detail: (id: number) => `${BASE_URL}/api/booking/${id}`,
-    summary:(id: number)=> `${BASE_URL}/api/booking/summary?roomid=${id}`,
+    summary: (id: number) => `${BASE_URL}/api/booking/summary?roomid=${id}`,
     byRoom: (roomId: number) => `${BASE_URL}/api/booking/?roomid=${roomId}`,
+    create: `${BASE_URL}/api/booking`,
+    update:(id: number)=> `${BASE_URL}/api/booking/${id}`,
   },
   branding: {
     detail: `${BASE_URL}/api/branding`,

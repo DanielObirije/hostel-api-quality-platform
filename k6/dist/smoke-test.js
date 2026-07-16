@@ -80,7 +80,9 @@ var endpoint = {
     list: (id) => `${BASE_URL}/api/booking?roomid=${id}`,
     detail: (id) => `${BASE_URL}/api/booking/${id}`,
     summary: (id) => `${BASE_URL}/api/booking/summary?roomid=${id}`,
-    byRoom: (roomId) => `${BASE_URL}/api/booking/?roomid=${roomId}`
+    byRoom: (roomId) => `${BASE_URL}/api/booking/?roomid=${roomId}`,
+    create: `${BASE_URL}/api/booking`,
+    update: (id) => `${BASE_URL}/api/booking/${id}`
   },
   branding: {
     detail: `${BASE_URL}/api/branding`,
@@ -353,6 +355,34 @@ var import_k64 = require("k6");
 
 // k6/src/operations/BookingOperation.ts
 var import_k63 = require("k6");
+
+// k6/src/payloads/bookingPayload.ts
+var bookingPayloads = {
+  createBooking: {
+    roomid: Math.floor(Math.random() * 1e4) + 1,
+    firstname: "mark",
+    lastname: "Deadf",
+    depositpaid: true,
+    email: "tesdaft@email.com",
+    phone: "07123daf456789",
+    bookingdates: {
+      checkin: "2026-03-06",
+      checkout: "2026-03-07"
+    }
+  },
+  updateBooking: {
+    roomid: Math.floor(Math.random() * 1e4) + 1,
+    firstname: "Jane",
+    lastname: "Smith",
+    depositpaid: false,
+    bookingdates: {
+      checkin: "2024-12-21",
+      checkout: "2024-12-26"
+    }
+  }
+};
+
+// k6/src/operations/BookingOperation.ts
 var BookingOperation = class extends AuthOperation {
   constructor() {
     super();
@@ -414,6 +444,54 @@ var BookingOperation = class extends AuthOperation {
       }
     });
   }
+  createBooking() {
+    (0, import_k63.group)("Create booking", () => {
+      const url = endpoint.booking.create;
+      const headers = this.getAuthHeaders();
+      const response = performPost(
+        url,
+        headers,
+        bookingPayloads.createBooking,
+        "Successfully created booking",
+        "Create Booking"
+      );
+      const data = response.json();
+      if (response) {
+        (0, import_k63.check)(response, {
+          "Create Boooking Status is 201": (r) => r.status === 201,
+          "create Booking matches": () => {
+            return typeof data.bookingid === "number" && typeof data.firstname === "string" && typeof data.lastname === "string" && typeof data.depositpaid === "boolean" && typeof data.roomid === "number" && data.bookingdates && typeof data.bookingdates.checkin === "string" && typeof data.bookingdates.checkout === "string";
+          }
+        });
+      }
+    });
+  }
+  updateBooking() {
+    (0, import_k63.group)("update booking", () => {
+      const url = endpoint.booking.update(1);
+      const headers = this.getAuthHeaders();
+      const response = performPut(
+        url,
+        headers,
+        bookingPayloads.updateBooking,
+        "Successfully updated booking",
+        "update Booking"
+      );
+      const data = response.json();
+      if (response) {
+        (0, import_k63.check)(response, {
+          "Updated Booking Status is 200": (r) => r.status === 200,
+          "Updated Response has booking": () => data.booking !== void 0,
+          "Updated Response booking id exists": () => typeof data.bookingid === "number",
+          "Updated booking matches schema": () => {
+            const booking = data.booking;
+            return typeof booking.bookingid === "number" && typeof booking.firstname === "string" && typeof booking.lastname === "string" && typeof booking.depositpaid === "boolean" && typeof booking.roomid === "number" && booking.bookingdates !== void 0 && typeof booking.bookingdates.checkin === "string" && typeof booking.bookingdates.checkout === "string";
+          },
+          "Updated Response booking IDs match": () => data.bookingid === data.booking.bookingid
+        });
+      }
+    });
+  }
 };
 
 // k6/src/userjourneys/bookingJourney.ts
@@ -422,6 +500,8 @@ function bookingJourney() {
   operation.getAllBookings();
   operation.getBookingById();
   operation.getBookingSummary();
+  operation.createBooking();
+  operation.updateBooking();
 }
 
 // k6/scenarios/smoke-test.ts

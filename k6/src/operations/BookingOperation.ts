@@ -1,13 +1,18 @@
 import { check, group } from "k6";
 import { Response } from "k6/http";
 import { endpoint } from "endpoint";
-import { performGet } from "src/lib/requestUtils";
+import { performGet, performPost, performPut } from "src/lib/requestUtils";
 import { AuthOperation } from "./AuthOperation";
-
+import { bookingPayloads } from "src/payloads/bookingPayload";
 // export interface BookingDates {
 //   checkin: string;
 //   checkout: string;
 // }
+
+export interface CreateBookingResponse {
+  booking: Booking;
+  bookingid: number;
+}
 
 export interface BookingSummary {
   bookingDates: BookingDates;
@@ -120,6 +125,83 @@ export class BookingOperation extends AuthOperation {
               (booking) =>
                 typeof booking.bookingDates.checkin === "string" && typeof booking.bookingDates.checkout === "string"
             ),
+        });
+      }
+    });
+  }
+
+  createBooking() {
+    group("Create booking", () => {
+      const url = endpoint.booking.create;
+      const headers = this.getAuthHeaders();
+
+      const response = performPost(
+        url,
+        headers,
+        bookingPayloads.createBooking,
+        "Successfully created booking",
+        "Create Booking"
+      );
+      const data = response!.json() as unknown as Booking;
+
+      if (response) {
+        check(response, {
+          "Create Boooking Status is 201": (r: Response) => r.status === 201,
+          "create Booking matches": () => {
+            return (
+              typeof data.bookingid === "number" &&
+              typeof data.firstname === "string" &&
+              typeof data.lastname === "string" &&
+              typeof data.depositpaid === "boolean" &&
+              typeof data.roomid === "number" &&
+              data.bookingdates &&
+              typeof data.bookingdates.checkin === "string" &&
+              typeof data.bookingdates.checkout === "string"
+            );
+          },
+        });
+      }
+    });
+  }
+
+  updateBooking() {
+    group("update booking", () => {
+      const url = endpoint.booking.update(1);
+      const headers = this.getAuthHeaders();
+
+      const response = performPut(
+        url,
+        headers,
+        bookingPayloads.updateBooking,
+        "Successfully updated booking",
+        "update Booking"
+      );
+      const data = response!.json() as unknown as CreateBookingResponse;
+
+      if (response) {
+        check(response, {
+          "Updated Booking Status is 200": (r: Response) => r.status === 200,
+
+          "Updated Response has booking": () => data.booking !== undefined,
+
+          "Updated Response booking id exists": () => typeof data.bookingid === "number",
+
+          "Updated booking matches schema": () => {
+            const booking = data.booking;
+
+            return (
+              typeof booking.bookingid === "number" &&
+              typeof booking.firstname === "string" &&
+              typeof booking.lastname === "string" &&
+              typeof booking.depositpaid === "boolean" &&
+              typeof booking.roomid === "number" &&
+              booking.bookingdates !== undefined &&
+              typeof booking.bookingdates.checkin === "string" &&
+              typeof booking.bookingdates.checkout === "string"
+            );
+          },
+
+          "Updated Response booking IDs match": () => data.bookingid === data.booking.bookingid,
         });
       }
     });
