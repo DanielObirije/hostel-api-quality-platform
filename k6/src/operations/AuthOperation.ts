@@ -28,8 +28,8 @@ export class AuthOperation extends BaseOperation {
         username: username || this.username,
         password: password || this.password,
       };
+
       const response = performPost(url, headers, payload, "Successfully logged in", "Login");
-      console.warn(response?.json());
       if (response) {
         check(response, {
           "Login status 200": (r: Response) => r.status === 200,

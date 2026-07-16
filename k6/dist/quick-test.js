@@ -38,9 +38,6 @@ module.exports = __toCommonJS(quick_test_exports);
 // k6/src/operations/BrandOperation.ts
 var import_k62 = require("k6");
 
-// k6/src/operations/AuthOperation.ts
-var import_k6 = require("k6");
-
 // k6/config.ts
 var k6Config = {
   baseUrl: __ENV.BASE_URL || "https://automationintesting.online",
@@ -76,7 +73,7 @@ function logConfig() {
 var BASE_URL = k6Config.baseUrl;
 var endpoint = {
   auth: {
-    login: `${BASE_URL}/auth/login`,
+    login: `${BASE_URL}/api/auth/login`,
     logout: `${BASE_URL}/auth/logout`
   },
   booking: {
@@ -97,37 +94,6 @@ var endpoint = {
   report: {
     list: `${BASE_URL}/api/report`,
     byRoom: (roomId) => `${BASE_URL}/api/report/room/${roomId}`
-  }
-};
-
-// k6/src/operations/BaseOperation.ts
-var BaseOperation = class {
-  constructor() {
-    this.config = k6Config;
-    this.baseUrl = k6Config.baseUrl;
-    this.apiKey = k6Config.apiKey;
-    this.username = k6Config.credentials.username;
-    this.password = k6Config.credentials.password;
-    this.baseHeaders = {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    };
-    if (this.apiKey) {
-      this.baseHeaders["x-api-key"] = this.apiKey;
-    }
-  }
-  getHeaders(extraHeaders = {}) {
-    return {
-      ...this.baseHeaders,
-      ...extraHeaders
-    };
-  }
-  getAuthHeaders(token) {
-    const headers = this.getHeaders();
-    if (token) {
-      headers["Cookie"] = `token=${token}`;
-    }
-    return headers;
   }
 };
 
@@ -192,9 +158,49 @@ function performRequest(method, url, headers, payload, successMsg, label) {
     return null;
   }
 }
+function performGet(url, headers, successMsg, label) {
+  return performRequest("get", url, headers, void 0, successMsg, label);
+}
 function performPost(url, headers, payload, successMsg, label) {
   return performRequest("post", url, headers, payload, successMsg, label);
 }
+function performPut(url, headers, payload, successMsg, label) {
+  return performRequest("put", url, headers, payload, successMsg, label);
+}
+
+// k6/src/operations/AuthOperation.ts
+var import_k6 = require("k6");
+
+// k6/src/operations/BaseOperation.ts
+var BaseOperation = class {
+  constructor() {
+    this.config = k6Config;
+    this.baseUrl = k6Config.baseUrl;
+    this.apiKey = k6Config.apiKey;
+    this.username = k6Config.credentials.username;
+    this.password = k6Config.credentials.password;
+    this.baseHeaders = {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    };
+    if (this.apiKey) {
+      this.baseHeaders["x-api-key"] = this.apiKey;
+    }
+  }
+  getHeaders(extraHeaders = {}) {
+    return {
+      ...this.baseHeaders,
+      ...extraHeaders
+    };
+  }
+  getAuthHeaders(token) {
+    const headers = this.getHeaders();
+    if (token) {
+      headers["Cookie"] = `token=${token}`;
+    }
+    return headers;
+  }
+};
 
 // k6/src/operations/AuthOperation.ts
 var AuthOperation = class extends BaseOperation {
@@ -214,7 +220,6 @@ var AuthOperation = class extends BaseOperation {
         password: password || this.password
       };
       const response = performPost(url, headers, payload, "Successfully logged in", "Login");
-      console.warn(response?.json());
       if (response) {
         (0, import_k6.check)(response, {
           "Login status 200": (r) => r.status === 200,
@@ -235,30 +240,64 @@ var AuthOperation = class extends BaseOperation {
   }
 };
 
+// k6/src/payloads/brandingPayload.ts
+var brandingData = {
+  name: "Willow Creek Lodge",
+  logoUrl: "https://yourdomain.com/images/willow-creek-logo.jpg",
+  description: "Welcome to Willow Creek Lodge, a quiet countryside retreat surrounded by rolling hills near Oakbridge. A calm and comfortable place to relax and enjoy nature. All our rooms are cozy and we serve fresh breakfast every morning.",
+  directions: "Turn off the main road toward Maple Ridge Valley and follow signs for Willow Creek Lodge.",
+  contact: {
+    name: "Willow Creek Lodge",
+    phone: "019876543210",
+    email: "contact@willowcreeklodge.com"
+  },
+  address: {
+    line1: "Willow Creek Lodge",
+    line2: "Maple Ridge Valley",
+    postTown: "Oakbridge",
+    county: "Greenvale",
+    postCode: "G7 4XZ"
+  },
+  map: {
+    latitude: 54.123456,
+    longitude: -1.234567
+  }
+};
+
 // k6/src/operations/BrandOperation.ts
 var BrandOperation = class extends AuthOperation {
   constructor() {
     super();
   }
-  //   getBranding(): void {
-  //     group("GET website branding", () => {
-  //       const url = endpoint.branding.detail;
-  //       const headers = this.getAuthHeaders();
-  //       const response = performGet(url, headers, "Successfully retrieved branding", "Get Branding");
-  //       if (response) {
-  //         const data = response.json() as unknown as BrandDetails;
-  //         check(response, {
-  //           "Branding status is 200": (r: Response) => r.status === 200,
-  //           "Branding has name": () => data.name !== undefined,
-  //           "Branding has address": () => data.address !== undefined,
-  //         });
-  //       }
-  //     });
-  //   }
+  getBranding() {
+    (0, import_k62.group)("GET website branding", () => {
+      const url = endpoint.branding.detail;
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, "Successfully retrieved branding", "Get Branding");
+      if (response) {
+        const data = response.json();
+        (0, import_k62.check)(response, {
+          "Branding status is 200": (r) => r.status === 200,
+          "Branding has name": () => data.name !== void 0,
+          "Branding has address": () => data.address !== void 0
+        });
+      }
+    });
+  }
   updateBranding() {
     (0, import_k62.group)("PUT  update website branding", () => {
-      console.warn("yes yes");
       this.login("admin", "password");
+      const url = endpoint.branding.update;
+      const headers = this.getAuthHeaders();
+      const response = performPut(url, headers, brandingData, "Successfully updated branding", "PUT Branding");
+      if (response) {
+        const data = response.json();
+        (0, import_k62.check)(response, {
+          "Branding status is 200": (r) => r.status === 200,
+          "Response has success": () => data.success !== void 0,
+          "Success is true": () => data.success === true
+        });
+      }
     });
   }
 };

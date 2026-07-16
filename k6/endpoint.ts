@@ -4,7 +4,7 @@ const BASE_URL = k6Config.baseUrl;
 
 export const endpoint = {
   auth: {
-    login: `${BASE_URL}/auth/login`,
+    login: `${BASE_URL}/api/auth/login`,
     logout: `${BASE_URL}/auth/logout`,
   },
   booking: {
