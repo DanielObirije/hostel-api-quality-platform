@@ -3,6 +3,7 @@ import brandingJourney from "src/userjourneys/brandingJourney";
 import { createSenarioOption, defultConfigurations } from "src/config/senaroBase";
 import { logConfig } from "config";
 import { sleep } from "k6";
+import bookingJourney from "src/userjourneys/bookingJourney";
 // export const options = {
 //   vus: 1,
 //   duration: "10s",
@@ -18,6 +19,7 @@ export default function (): void {
 
   // completeJourney();
   brandingJourney();
+  bookingJourney();
 
   sleep(1);
 }

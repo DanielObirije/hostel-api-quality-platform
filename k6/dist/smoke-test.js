@@ -77,9 +77,9 @@ var endpoint = {
     logout: `${BASE_URL}/auth/logout`
   },
   booking: {
-    list: `${BASE_URL}/api/booking`,
+    list: (id) => `${BASE_URL}/api/booking?roomid=${id}`,
     detail: (id) => `${BASE_URL}/api/booking/${id}`,
-    summary: `${BASE_URL}/api/booking/summary`,
+    summary: (id) => `${BASE_URL}/api/booking/summary?roomid=${id}`,
     byRoom: (roomId) => `${BASE_URL}/api/booking/?roomid=${roomId}`
   },
   branding: {
@@ -349,12 +349,88 @@ var defultConfigurations = {
 };
 
 // k6/scenarios/smoke-test.ts
+var import_k64 = require("k6");
+
+// k6/src/operations/BookingOperation.ts
 var import_k63 = require("k6");
+var BookingOperation = class extends AuthOperation {
+  constructor() {
+    super();
+  }
+  getAllBookings() {
+    (0, import_k63.group)("Get all bookings", () => {
+      this.login("admin", "password");
+      const url = endpoint.booking.list(1);
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, "Successfully retrieved all bookings", "Get All Bookings");
+      if (response) {
+        const data = response.json();
+        (0, import_k63.check)(response, {
+          "Boookings Status is 200": (r) => r.status === 200,
+          "Bookings array exists": () => Array.isArray(data.bookings),
+          "Response contains at least one booking": () => data.bookings.length > 0,
+          "First booking has required fields": () => {
+            const booking = data.bookings[0];
+            return booking && typeof booking.bookingid === "number" && typeof booking.firstname === "string" && typeof booking.lastname === "string" && typeof booking.depositpaid === "boolean" && typeof booking.roomid === "number" && booking.bookingdates && typeof booking.bookingdates.checkin === "string" && typeof booking.bookingdates.checkout === "string";
+          }
+        });
+      }
+    });
+  }
+  getBookingById() {
+    (0, import_k63.group)("Get booking by ID", () => {
+      this.login("admin", "password");
+      const url = endpoint.booking.detail(1);
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, `Successfully retrieved booking `, `Get Booking`);
+      if (response) {
+        const data = response.json();
+        (0, import_k63.check)(response, {
+          "Boooking Status is 200": (r) => r.status === 200,
+          "Booking id matches": () => {
+            return typeof data.bookingid === "number" && typeof data.firstname === "string" && typeof data.lastname === "string" && typeof data.depositpaid === "boolean" && typeof data.roomid === "number" && data.bookingdates && typeof data.bookingdates.checkin === "string" && typeof data.bookingdates.checkout === "string";
+          }
+        });
+      }
+    });
+  }
+  getBookingSummary() {
+    (0, import_k63.group)("Get bookingDates by ID", () => {
+      this.login("admin", "password");
+      const url = endpoint.booking.summary(1);
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, `Successfully retrieved booking Dates `, `Get Booking Dates`);
+      if (response) {
+        const data = response.json();
+        (0, import_k63.check)(response, {
+          "Bookings dates status is 200": (r) => r.status === 200,
+          "Bookings dates array exists": () => Array.isArray(data.bookings),
+          "Bookings dates array is not empty": () => data.bookings.length > 0,
+          "Booking dates exist": () => data.bookings.every((booking) => booking.bookingDates !== void 0),
+          "Booking dates have checkin and checkout": () => data.bookings.every(
+            (booking) => typeof booking.bookingDates.checkin === "string" && typeof booking.bookingDates.checkout === "string"
+          )
+        });
+      }
+    });
+  }
+};
+
+// k6/src/userjourneys/bookingJourney.ts
+function bookingJourney() {
+  const operation = new BookingOperation();
+  operation.getAllBookings();
+  operation.getBookingById();
+  operation.getBookingSummary();
+}
+
+// k6/scenarios/smoke-test.ts
 var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
 function smoke_test_default() {
   logConfig();
   brandingJourney();
-  (0, import_k63.sleep)(1);
+  bookingJourney();
+  (0, import_k64.sleep)(1);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

@@ -8,9 +8,9 @@ export const endpoint = {
     logout: `${BASE_URL}/auth/logout`,
   },
   booking: {
-    list: `${BASE_URL}/api/booking`,
+    list: (id: number) => `${BASE_URL}/api/booking?roomid=${id}`,
     detail: (id: number) => `${BASE_URL}/api/booking/${id}`,
-    summary: `${BASE_URL}/api/booking/summary`,
+    summary:(id: number)=> `${BASE_URL}/api/booking/summary?roomid=${id}`,
     byRoom: (roomId: number) => `${BASE_URL}/api/booking/?roomid=${roomId}`,
   },
   branding: {
