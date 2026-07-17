@@ -357,7 +357,7 @@ var defultConfigurations = {
 };
 
 // k6/scenarios/smoke-test.ts
-var import_k66 = require("k6");
+var import_k67 = require("k6");
 
 // k6/src/operations/BookingOperation.ts
 var import_k63 = require("k6");
@@ -677,7 +677,6 @@ var RoomOperation = class extends AuthOperation {
       const url = endpoint.room.update(1);
       const headers = this.getAuthHeaders();
       const response = performPut(url, headers, roomData, `Successfully updated room `, `PUT Room`);
-      console.warn(response?.json());
       if (response) {
         const data = response.json();
         (0, import_k65.check)(response, {
@@ -705,6 +704,61 @@ function RoomJourney() {
   operation.updateMessage();
 }
 
+// k6/src/operations/ReportOperation.ts
+var import_k66 = require("k6");
+var ReportOperation = class extends AuthOperation {
+  constructor() {
+    super();
+  }
+  getReportById() {
+    (0, import_k66.group)("GET report by ID", () => {
+      this.login("admin", "password");
+      const url = endpoint.report.byRoom(1);
+      const headers = this.getHeaders();
+      const response = performGet(url, headers, `Successfully retrieved report by ID `, `Get Report BY ID`);
+      if (response) {
+        const data = response.json();
+        (0, import_k66.check)(response, {
+          "Report by ID status is 200": (r) => r.status === 200,
+          "Report by ID  array exists": () => Array.isArray(data.report),
+          "Report by ID array is not empty": () => data.report.length > 0,
+          "Report by ID  start is a string": () => data.report.every((report) => typeof report.start === "string"),
+          "Report by ID  end is a string": () => data.report.every((report) => typeof report.end === "string"),
+          "Report by ID  title is a string": () => data.report.every((report) => typeof report.title === "string")
+        });
+      }
+    });
+  }
+  getReport() {
+    (0, import_k66.group)("GET report", () => {
+      this.login("admin", "password");
+      const url = endpoint.report.list;
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, `Successfully retrieved report  `, `Get Report`);
+      if (response) {
+        const data = response.json();
+        if (response) {
+          (0, import_k66.check)(response, {
+            "Report status is 200": (r) => r.status === 200,
+            "Report array exists": () => Array.isArray(data.report),
+            "Report array is not empty": () => data.report.length > 0,
+            "Report start is a string": () => data.report.every((report) => typeof report.start === "string"),
+            "Report end is a string": () => data.report.every((report) => typeof report.end === "string"),
+            "Report title is a string": () => data.report.every((report) => typeof report.title === "string")
+          });
+        }
+      }
+    });
+  }
+};
+
+// k6/src/userjourneys/reportJourney.ts
+function ReportJourney() {
+  const operation = new ReportOperation();
+  operation.getReportById();
+  operation.getReport();
+}
+
 // k6/scenarios/smoke-test.ts
 var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
 function smoke_test_default() {
@@ -713,7 +767,8 @@ function smoke_test_default() {
   bookingJourney();
   MessageJourney();
   RoomJourney();
-  (0, import_k66.sleep)(1);
+  ReportJourney();
+  (0, import_k67.sleep)(1);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

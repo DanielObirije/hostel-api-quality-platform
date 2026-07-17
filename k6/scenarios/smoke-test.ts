@@ -6,6 +6,7 @@ import { sleep } from "k6";
 import bookingJourney from "src/userjourneys/bookingJourney";
 import MessageJourney from "src/userjourneys/messageJourney";
 import RoomJourney from "src/userjourneys/roomJourney";
+import ReportJourney from "src/userjourneys/reportJourney";
 // export const options = {
 //   vus: 1,
 //   duration: "10s",
@@ -24,5 +25,6 @@ export default function (): void {
   bookingJourney();
   MessageJourney()
   RoomJourney()
+  ReportJourney()
   sleep(1);
 }

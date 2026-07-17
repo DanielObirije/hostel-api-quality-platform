@@ -101,7 +101,6 @@ export class RoomOperation extends AuthOperation {
       const url = endpoint.room.update(1);
       const headers = this.getAuthHeaders();
       const response = performPut(url, headers, roomData, `Successfully updated room `, `PUT Room`);
-      console.warn(response?.json());
       if (response) {
         const data = response.json() as unknown as Room;
         check(response, {
