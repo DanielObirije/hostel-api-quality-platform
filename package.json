@@ -8,7 +8,10 @@
     "k6:build": "node k6/build.js",
     "k6:smoke": "k6 run k6/dist/smoke-test.js",
     "k6:quick": "k6 run k6/dist/quick-test.js",
-    "k6:test": "npm run k6:build && npm run k6:quick && npm run k6:smoke",
+    "k6:soak": "k6 run k6/dist/soak-test.js",
+    "k6:stress": "k6 run k6/dist/stress-test.js",
+    "k6:load": "k6 run k6/dist/load-test.js",
+    "k6:test": "npm run k6:build && npm run k6:quick && npm run k6:smoke && npm run k6:soak && npm run k6:load && npm run k6:stress ",
     "prepare": "husky",
     "lint": "eslint .",
     "prettier": "prettier --write ."

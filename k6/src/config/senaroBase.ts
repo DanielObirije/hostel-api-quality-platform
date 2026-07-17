@@ -54,4 +54,22 @@ export const defultConfigurations = {
     vus: 1,
     iterations: 1,
   },
+  soak: {
+    executor: "constant-vus",
+    vus: 3,
+    duration: "15m",
+    gracefulStop: "10s",
+  },
+  
+  stress: {
+    executor: "ramping-vus",
+    stages: [
+      { duration: "2m", target: 10 },
+      { duration: "3m", target: 10 },
+      { duration: "2m", target: 20 },
+      { duration: "3m", target: 20 },
+      { duration: "2m", target: 0 },
+    ],
+    gracefulStop: "10s",
+  },
 };

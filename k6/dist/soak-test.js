@@ -27,13 +27,13 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// k6/scenarios/smoke-test.ts
-var smoke_test_exports = {};
-__export(smoke_test_exports, {
-  default: () => smoke_test_default,
+// k6/scenarios/soak-test.ts
+var soak_test_exports = {};
+__export(soak_test_exports, {
+  default: () => soak_test_default,
   options: () => options
 });
-module.exports = __toCommonJS(smoke_test_exports);
+module.exports = __toCommonJS(soak_test_exports);
 
 // k6/src/operations/BrandOperation.ts
 var import_k62 = require("k6");
@@ -316,65 +316,6 @@ function brandingJourney() {
   operation.getBranding();
   operation.updateBranding();
 }
-
-// k6/src/config/senaroBase.ts
-function createSenarioOption(testName, senarioConfig, customThresholds = {}, additionalOption = {}) {
-  return {
-    cloud: {
-      projectID: 1,
-      name: testName
-    },
-    summaryTrendStats: ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)"],
-    summaryTimeUnit: "ms",
-    senarios: senarioConfig,
-    thresholds: {
-      http_req_duration: [k6Config.thresholds.http_req_duration],
-      http_req_failed: [k6Config.thresholds.http_req_failed],
-      checks: [k6Config.thresholds.checks],
-      ...customThresholds
-    },
-    ...additionalOption
-  };
-}
-var defultConfigurations = {
-  smoke: {
-    executor: "constant-vus",
-    vus: 1,
-    duration: "1m",
-    gracefulStop: "5s"
-  },
-  load: {
-    executor: "constant-vus",
-    vus: 5,
-    duration: "5m",
-    gracefulStop: "10s"
-  },
-  quick: {
-    executor: "constant-vus",
-    vus: 1,
-    iterations: 1
-  },
-  soak: {
-    executor: "constant-vus",
-    vus: 3,
-    duration: "15m",
-    gracefulStop: "10s"
-  },
-  stress: {
-    executor: "ramping-vus",
-    stages: [
-      { duration: "2m", target: 10 },
-      { duration: "3m", target: 10 },
-      { duration: "2m", target: 20 },
-      { duration: "3m", target: 20 },
-      { duration: "2m", target: 0 }
-    ],
-    gracefulStop: "10s"
-  }
-};
-
-// k6/scenarios/smoke-test.ts
-var import_k67 = require("k6");
 
 // k6/src/operations/BookingOperation.ts
 var import_k63 = require("k6");
@@ -721,6 +662,65 @@ function RoomJourney() {
   operation.updateMessage();
 }
 
+// k6/src/config/senaroBase.ts
+function createSenarioOption(testName, senarioConfig, customThresholds = {}, additionalOption = {}) {
+  return {
+    cloud: {
+      projectID: 1,
+      name: testName
+    },
+    summaryTrendStats: ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)"],
+    summaryTimeUnit: "ms",
+    senarios: senarioConfig,
+    thresholds: {
+      http_req_duration: [k6Config.thresholds.http_req_duration],
+      http_req_failed: [k6Config.thresholds.http_req_failed],
+      checks: [k6Config.thresholds.checks],
+      ...customThresholds
+    },
+    ...additionalOption
+  };
+}
+var defultConfigurations = {
+  smoke: {
+    executor: "constant-vus",
+    vus: 1,
+    duration: "1m",
+    gracefulStop: "5s"
+  },
+  load: {
+    executor: "constant-vus",
+    vus: 5,
+    duration: "5m",
+    gracefulStop: "10s"
+  },
+  quick: {
+    executor: "constant-vus",
+    vus: 1,
+    iterations: 1
+  },
+  soak: {
+    executor: "constant-vus",
+    vus: 3,
+    duration: "15m",
+    gracefulStop: "10s"
+  },
+  stress: {
+    executor: "ramping-vus",
+    stages: [
+      { duration: "2m", target: 10 },
+      { duration: "3m", target: 10 },
+      { duration: "2m", target: 20 },
+      { duration: "3m", target: 20 },
+      { duration: "2m", target: 0 }
+    ],
+    gracefulStop: "10s"
+  }
+};
+
+// k6/scenarios/soak-test.ts
+var import_k67 = require("k6");
+
 // k6/src/operations/ReportOperation.ts
 var import_k66 = require("k6");
 var ReportOperation = class extends AuthOperation {
@@ -776,9 +776,9 @@ function ReportJourney() {
   operation.getReport();
 }
 
-// k6/scenarios/smoke-test.ts
-var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
-function smoke_test_default() {
+// k6/scenarios/soak-test.ts
+var options = createSenarioOption("Quick Test", { quick_test: defultConfigurations.soak });
+function soak_test_default() {
   logConfig();
   brandingJourney();
   bookingJourney();

@@ -27,13 +27,13 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// k6/scenarios/smoke-test.ts
-var smoke_test_exports = {};
-__export(smoke_test_exports, {
-  default: () => smoke_test_default,
+// k6/scenarios/stress-test.ts
+var stress_test_exports = {};
+__export(stress_test_exports, {
+  default: () => stress_test_default,
   options: () => options
 });
-module.exports = __toCommonJS(smoke_test_exports);
+module.exports = __toCommonJS(stress_test_exports);
 
 // k6/src/operations/BrandOperation.ts
 var import_k62 = require("k6");
@@ -373,7 +373,7 @@ var defultConfigurations = {
   }
 };
 
-// k6/scenarios/smoke-test.ts
+// k6/scenarios/stress-test.ts
 var import_k67 = require("k6");
 
 // k6/src/operations/BookingOperation.ts
@@ -776,9 +776,9 @@ function ReportJourney() {
   operation.getReport();
 }
 
-// k6/scenarios/smoke-test.ts
-var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
-function smoke_test_default() {
+// k6/scenarios/stress-test.ts
+var options = createSenarioOption("Stress Test", { smoke_test: defultConfigurations.stress });
+function stress_test_default() {
   logConfig();
   brandingJourney();
   bookingJourney();
