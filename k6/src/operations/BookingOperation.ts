@@ -4,11 +4,6 @@ import { endpoint } from "endpoint";
 import { performGet, performPost, performPut } from "src/lib/requestUtils";
 import { AuthOperation } from "./AuthOperation";
 import { bookingPayloads } from "src/payloads/bookingPayload";
-// export interface BookingDates {
-//   checkin: string;
-//   checkout: string;
-// }
-
 export interface CreateBookingResponse {
   booking: Booking;
   bookingid: number;

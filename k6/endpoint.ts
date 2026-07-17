@@ -13,16 +13,22 @@ export const endpoint = {
     summary: (id: number) => `${BASE_URL}/api/booking/summary?roomid=${id}`,
     byRoom: (roomId: number) => `${BASE_URL}/api/booking/?roomid=${roomId}`,
     create: `${BASE_URL}/api/booking`,
-    update:(id: number)=> `${BASE_URL}/api/booking/${id}`,
+    update: (id: number) => `${BASE_URL}/api/booking/${id}`,
   },
   branding: {
     detail: `${BASE_URL}/api/branding`,
     update: `${BASE_URL}/api/branding`,
   },
-  room: {
-    list: `${BASE_URL}/api/room`,
+  message: {
+    list: `${BASE_URL}/api/message`,
     detail: (id: number) => `${BASE_URL}/api/room/${id}`,
     create: `${BASE_URL}/api/room`,
+  },
+
+  room: {
+    list: `${BASE_URL}/api/room`,
+    detail: (id: number) => `${BASE_URL}/api/message/${id}`,
+    create: `${BASE_URL}/api/message`,
   },
   report: {
     list: `${BASE_URL}/api/report`,

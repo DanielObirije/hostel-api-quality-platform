@@ -13,7 +13,7 @@ function performRequest(
 ): http.Response | null {
   if (label) logInfo(`Requesting ${label} at ${url}`);
 
-  let body: string | undefined;
+  let body: string | undefined ;
 
   if (payload !== undefined && payload !== null) {
     body = typeof payload === "object" ? JSON.stringify(payload) : String(payload);

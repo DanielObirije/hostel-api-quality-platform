@@ -88,10 +88,15 @@ var endpoint = {
     detail: `${BASE_URL}/api/branding`,
     update: `${BASE_URL}/api/branding`
   },
-  room: {
-    list: `${BASE_URL}/api/room`,
+  message: {
+    list: `${BASE_URL}/api/message`,
     detail: (id) => `${BASE_URL}/api/room/${id}`,
     create: `${BASE_URL}/api/room`
+  },
+  room: {
+    list: `${BASE_URL}/api/room`,
+    detail: (id) => `${BASE_URL}/api/message/${id}`,
+    create: `${BASE_URL}/api/message`
   },
   report: {
     list: `${BASE_URL}/api/report`,
@@ -351,7 +356,7 @@ var defultConfigurations = {
 };
 
 // k6/scenarios/smoke-test.ts
-var import_k64 = require("k6");
+var import_k65 = require("k6");
 
 // k6/src/operations/BookingOperation.ts
 var import_k63 = require("k6");
@@ -504,13 +509,95 @@ function bookingJourney() {
   operation.updateBooking();
 }
 
+// k6/src/operations/MessageOperation.ts
+var import_k64 = require("k6");
+
+// k6/src/payloads/messagePayload.ts
+var messageData = {
+  name: "James Dean",
+  email: "james@email.com",
+  phone: "01402 619211",
+  subject: "Booking enquiry",
+  description: "I would like to book a room at your place"
+};
+
+// k6/src/operations/MessageOperation.ts
+var MessageOperation = class extends AuthOperation {
+  constructor() {
+    super();
+  }
+  getMessage() {
+    (0, import_k64.group)("GET message", () => {
+      const url = endpoint.message.list;
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, "Successfully retrieved messages", "Get Messages");
+      if (response) {
+        const data = response.json();
+        (0, import_k64.check)(response, {
+          "Branding status is 200": (r) => r.status === 200,
+          "Messages array exists": () => Array.isArray(data.messages),
+          "Messages array is not empt": () => data.messages.length > 0,
+          "Messages has required fields": () => {
+            const booking = data.messages[0];
+            return booking && typeof booking.id === "number" && typeof booking.name === "string" && typeof booking.read === "boolean" && typeof booking.subject === "string";
+          }
+        });
+      }
+    });
+  }
+  getMessageById() {
+    (0, import_k64.group)("Get message by ID", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.detail(1);
+      const headers = this.getAuthHeaders();
+      const response = performGet(url, headers, `Successfully retrieved messages by ID  `, `Get Messages By ID`);
+      if (response) {
+        const data = response.json();
+        (0, import_k64.check)(response, {
+          "Message status is 200": (r) => r.status === 200,
+          "Message description is a string": () => typeof data.description === "string",
+          "Message email is a string": () => typeof data.email === "string",
+          "Message ID is a number": () => typeof data.messageid === "number",
+          "Message name is a string": () => typeof data.name === "string",
+          "Message phone is a string": () => typeof data.phone === "string",
+          "Message subject is a string": () => typeof data.subject === "string"
+        });
+      }
+    });
+  }
+  createMessage() {
+    (0, import_k64.group)("POST message", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.create;
+      const headers = this.getHeaders();
+      const response = performPost(url, headers, messageData, `Successfully created messages  `, `POST Message`);
+      if (response) {
+        const data = response.json();
+        (0, import_k64.check)(response, {
+          "Create Message status is 200": (r) => r.status === 200,
+          "Create Message is a string": () => typeof data.success === "boolean"
+        });
+      }
+    });
+  }
+};
+
+// k6/src/userjourneys/messageJourney.ts
+function MessageJourney() {
+  const operation = new MessageOperation();
+  operation.getMessage();
+  operation.getMessageById();
+  operation.createMessage();
+}
+
 // k6/scenarios/smoke-test.ts
 var options = createSenarioOption("Smoke Test", { smoke_test: defultConfigurations.smoke });
 function smoke_test_default() {
   logConfig();
   brandingJourney();
   bookingJourney();
-  (0, import_k64.sleep)(1);
+  MessageJourney();
+  (0, import_k65.sleep)(1);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
