@@ -2,6 +2,7 @@
 import brandingJourney from "src/userjourneys/brandingJourney";
 import bookingJourney from "src/userjourneys/bookingJourney";
 import MessageJourney from "src/userjourneys/messageJourney";
+import RoomJourney from "src/userjourneys/roomJourney";
 import { createSenarioOption, defultConfigurations } from "src/config/senaroBase";
 import { logConfig } from "config";
 import { sleep } from "k6";
@@ -14,6 +15,7 @@ export default function (): void {
   brandingJourney();
   bookingJourney();
   MessageJourney()
+  RoomJourney()
 
   sleep(1);
 }

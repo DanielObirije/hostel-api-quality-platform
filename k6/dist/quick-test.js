@@ -90,13 +90,14 @@ var endpoint = {
   },
   message: {
     list: `${BASE_URL}/api/message`,
-    detail: (id) => `${BASE_URL}/api/room/${id}`,
-    create: `${BASE_URL}/api/room`
+    detail: (id) => `${BASE_URL}/api/message/${id}`,
+    create: `${BASE_URL}/api/message`
   },
   room: {
     list: `${BASE_URL}/api/room`,
-    detail: (id) => `${BASE_URL}/api/message/${id}`,
-    create: `${BASE_URL}/api/message`
+    detail: (id) => `${BASE_URL}/api/room/${id}`,
+    create: `${BASE_URL}/api/room`,
+    update: (id) => `${BASE_URL}/api/room/${id}`
   },
   report: {
     list: `${BASE_URL}/api/report`,
@@ -506,7 +507,7 @@ var MessageOperation = class extends AuthOperation {
   getMessageById() {
     (0, import_k64.group)("Get message by ID", () => {
       this.login("admin", "password");
-      const url = endpoint.room.detail(1);
+      const url = endpoint.message.detail(1);
       const headers = this.getAuthHeaders();
       const response = performGet(url, headers, `Successfully retrieved messages by ID  `, `Get Messages By ID`);
       if (response) {
@@ -526,7 +527,7 @@ var MessageOperation = class extends AuthOperation {
   createMessage() {
     (0, import_k64.group)("POST message", () => {
       this.login("admin", "password");
-      const url = endpoint.room.create;
+      const url = endpoint.message.create;
       const headers = this.getHeaders();
       const response = performPost(url, headers, messageData, `Successfully created messages  `, `POST Message`);
       if (response) {
@@ -546,6 +547,120 @@ function MessageJourney() {
   operation.getMessage();
   operation.getMessageById();
   operation.createMessage();
+}
+
+// k6/src/operations/RoomOperation.ts
+var import_k65 = require("k6");
+
+// k6/src/payloads/roomPayload.ts
+var roomData = {
+  roomName: Math.floor(Math.random() * 1e4) + 1,
+  type: "Suite",
+  accessible: true,
+  image: "https://blog.postman.com/wp-content/uploads/2014/07/logo.png",
+  description: "This is room 101, dare you enter?",
+  roomPrice: 100,
+  features: ["WiFi", "Safe"]
+};
+
+// k6/src/operations/RoomOperation.ts
+var RoomOperation = class extends AuthOperation {
+  constructor() {
+    super();
+  }
+  getRoom() {
+    (0, import_k65.group)("GET room", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.list;
+      const headers = this.getHeaders();
+      const response = performGet(url, headers, `Successfully retrieved rooms `, `Get Rooms`);
+      if (response) {
+        const data = response.json();
+        (0, import_k65.check)(response, {
+          "Rooms status is 200": (r) => r.status === 200,
+          "Rooms array exists": () => Array.isArray(data.rooms),
+          "Rooms array is not empty": () => data.rooms.length > 0,
+          "Rooms have accessible": () => data.rooms.every((room) => typeof room.accessible === "boolean"),
+          "Rooms have description": () => data.rooms.every((room) => typeof room.description === "string"),
+          "Rooms have features": () => data.rooms.every((room) => Array.isArray(room.features)),
+          "Rooms have image": () => data.rooms.every((room) => typeof room.image === "string"),
+          "Rooms have room name": () => data.rooms.every((room) => typeof room.roomName === "string"),
+          "Rooms have room price": () => data.rooms.every((room) => typeof room.roomPrice === "number"),
+          "Rooms have room ID": () => data.rooms.every((room) => typeof room.roomid === "number"),
+          "Rooms have type": () => data.rooms.every((room) => typeof room.type === "string")
+        });
+      }
+    });
+  }
+  getRoomById() {
+    (0, import_k65.group)("GET room by ID", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.detail(1);
+      const headers = this.getHeaders();
+      const response = performGet(url, headers, `Successfully retrieved rooms by ID `, `Get Rooms By ID`);
+      if (response) {
+        const data = response.json();
+        (0, import_k65.check)(response, {
+          "Room status is 200": (r) => r.status === 200,
+          "Room accessible is a boolean": () => typeof data.accessible === "boolean",
+          "Room description is a string": () => typeof data.description === "string",
+          "Room features is an array": () => Array.isArray(data.features),
+          "Room image is a string": () => typeof data.image === "string",
+          "Room name is a string": () => typeof data.roomName === "string",
+          "Room price is a number": () => typeof data.roomPrice === "number",
+          "Room ID is a number": () => typeof data.roomid === "number",
+          "Room type is a string": () => typeof data.type === "string"
+        });
+      }
+    });
+  }
+  createMessage() {
+    (0, import_k65.group)("POST room", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.create;
+      const headers = this.getAuthHeaders();
+      const response = performPost(url, headers, roomData, `Successfully created room `, `POST Room`);
+      if (response) {
+        const data = response.json();
+        (0, import_k65.check)(response, {
+          "Create Room status is 200": (r) => r.status === 200,
+          "Create Room is a string": () => typeof data.success === "boolean"
+        });
+      }
+    });
+  }
+  updateMessage() {
+    (0, import_k65.group)("PUT room", () => {
+      this.login("admin", "password");
+      const url = endpoint.room.update(1);
+      const headers = this.getAuthHeaders();
+      const response = performPut(url, headers, roomData, `Successfully updated room `, `PUT Room`);
+      console.warn(response?.json());
+      if (response) {
+        const data = response.json();
+        (0, import_k65.check)(response, {
+          "Update Room status is 202": (r) => r.status === 202,
+          "Update Room accessible is a boolean": () => typeof data.accessible === "boolean",
+          "Update Room description is a string": () => typeof data.description === "string",
+          "Update Room features is an array": () => Array.isArray(data.features),
+          "Update Room image is a string": () => typeof data.image === "string",
+          "Update Room name is a string": () => typeof data.roomName === "string",
+          "Update Room price is a number": () => typeof data.roomPrice === "number",
+          "Update Room ID is a number": () => typeof data.roomid === "number",
+          "Update Room type is a string": () => typeof data.type === "string"
+        });
+      }
+    });
+  }
+};
+
+// k6/src/userjourneys/roomJourney.ts
+function RoomJourney() {
+  const operation = new RoomOperation();
+  operation.getRoom();
+  operation.getRoomById();
+  operation.createMessage();
+  operation.updateMessage();
 }
 
 // k6/src/config/senaroBase.ts
@@ -588,14 +703,15 @@ var defultConfigurations = {
 };
 
 // k6/scenarios/quick-test.ts
-var import_k65 = require("k6");
+var import_k66 = require("k6");
 var options = createSenarioOption("Quick Test", { quick_test: defultConfigurations.quick });
 function quick_test_default() {
   logConfig();
   brandingJourney();
   bookingJourney();
   MessageJourney();
-  (0, import_k65.sleep)(1);
+  RoomJourney();
+  (0, import_k66.sleep)(1);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

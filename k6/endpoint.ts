@@ -21,14 +21,15 @@ export const endpoint = {
   },
   message: {
     list: `${BASE_URL}/api/message`,
-    detail: (id: number) => `${BASE_URL}/api/room/${id}`,
-    create: `${BASE_URL}/api/room`,
+    detail: (id: number) => `${BASE_URL}/api/message/${id}`,
+    create: `${BASE_URL}/api/message`,
   },
 
   room: {
     list: `${BASE_URL}/api/room`,
-    detail: (id: number) => `${BASE_URL}/api/message/${id}`,
-    create: `${BASE_URL}/api/message`,
+    detail: (id: number) => `${BASE_URL}/api/room/${id}`,
+    create: `${BASE_URL}/api/room`,
+    update: (id: number) => `${BASE_URL}/api/room/${id}`,
   },
   report: {
     list: `${BASE_URL}/api/report`,

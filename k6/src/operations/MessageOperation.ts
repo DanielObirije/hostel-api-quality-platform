@@ -63,7 +63,7 @@ export class MessageOperation extends AuthOperation {
   getMessageById() {
     group("Get message by ID", () => {
       this.login("admin", "password");
-      const url = endpoint.room.detail(1);
+      const url = endpoint.message.detail(1);
       const headers = this.getAuthHeaders();
       const response = performGet(url, headers, `Successfully retrieved messages by ID  `, `Get Messages By ID`);
       if (response) {
@@ -84,7 +84,7 @@ export class MessageOperation extends AuthOperation {
   createMessage() {
     group("POST message", () => {
       this.login("admin", "password");
-      const url = endpoint.room.create;
+      const url = endpoint.message.create;
       const headers = this.getHeaders();
       const response = performPost(url, headers, messageData, `Successfully created messages  `, `POST Message`);
       if (response) {
