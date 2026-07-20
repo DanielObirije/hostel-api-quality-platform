@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.13.1
+    container_name: prometheus
+    volumes:
+      - ./k6/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data: /prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    networks:
+      - k6-network
+  grafana:
+    image: grafana/grafana:12.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data: /var/lib/grafana
+      - ./k6/observability/grafana/dashboards:/etc/grafana/provisioning/dashboard
+      - ./k6/observability/grafana/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    networks:
+      - k6-network
+    depends_on:
+      - prometheus
+
+  networks:
+    k6-networks:
+      driver:bridge
+
+  volumes:
+     prometheus_data
+     grafana_data:
