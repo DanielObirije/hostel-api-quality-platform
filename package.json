@@ -12,6 +12,9 @@
     "k6:stress": "k6 run k6/dist/stress-test.js",
     "k6:load": "k6 run k6/dist/load-test.js",
     "k6:test": "npm run k6:build && npm run k6:quick && npm run k6:smoke && npm run k6:soak && npm run k6:load && npm run k6:stress ",
+    "monitoring:up": "docker-compose -f docker-compose.k6.yml up -d",
+    "monitoring:down": "docker-compose -f docker-compose.k6.yml down",
+    "monitoring:logs": "docker-compose -f docker-compose.k6.yml logs -f",
     "prepare": "husky",
     "lint": "eslint .",
     "prettier": "prettier --write ."
